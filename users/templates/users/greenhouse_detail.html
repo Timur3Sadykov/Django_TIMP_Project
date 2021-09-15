@@ -1,0 +1,79 @@
+{% extends 'users/main.html' %}
+{% block main_section %}
+    <div class="alert alert-light">
+      <h1>{{ object.name }}</h1>
+
+      <hr>
+      {% for tc in TController %}
+        {% if tc.house == object %}
+          <h5>Контроллер температуры <b>{{ tc.name }}</b></h5>
+          {% if tc.status == False %}
+            <h><b>Статус: офлайн. Ожидание подключения...</b></h><br>
+          {% endif %}
+          <h>Температура: <b>{{ tc.t }}</b><br>
+            Проветривание: START <b>{{ tc.vstart }}</b> STOP <b>{{ tc.vstop }}</b><br>
+            Подогрев: START <b>{{ tc.hstart }}</b> STOP <b>{{ tc.hstop }}</b><br>
+            MIN: <b>{{ tc.tmin }}</b> MAX: <b>{{ tc.tmax }}</b><br>
+            Обновление каждые <b>{{ tc.refresh }}</b> минут</h><br>
+          {% if tc.status == True %}
+              <a href="{% url 'ControllerDetail' tc.UUID %}" class="btn btn-outline-info mt-3">Показания</a>
+          {% endif %}
+          <a href="{% url 'TController-update' tc.UUID %}" class="btn btn-outline-info mt-3">Изменить</a>
+          <a href="{% url 'TController-delete' tc.UUID %}" class="btn btn-outline-danger mt-3">Удалить</a>
+          <hr>
+        {% endif %}
+      {% endfor %}
+
+      {% for lc in LController %}
+        {% if lc.house == object %}
+          <h5>Контроллер освещенности <b>{{ lc.name }}</b></h5>
+          {% if lc.status == False %}
+            <h><b>Статус: офлайн. Ожидание подключения...</b></h><br>
+          {% endif %}
+          <h>Освещенность: <b>{{ lc.light }}</b> % <br>
+            Световой день: START <b>{{ lc.LightDayStart }}</b> STOP <b>{{ lc.LightDayStop }}</b><br>
+            Обновление каждые <b>{{ lc.refresh }}</b> минут</h><br>
+          {% if lc.status == True %}
+              <a href="{% url 'LControllerDetail' lc.UUID %}" class="btn btn-outline-info mt-3">Показания</a>
+          {% endif %}
+          <a href="{% url 'LController-update' lc.UUID %}" class="btn btn-outline-info mt-3">Изменить</a>
+          <a href="{% url 'LController-delete' lc.UUID %}" class="btn btn-outline-danger mt-3">Удалить</a>
+          <hr>
+        {% endif %}
+      {% endfor %}
+
+      {% for lc in WController %}
+        {% if lc.house == object %}
+          <h5>Контроллер влажности почвы <b>{{ lc.name }}</b></h5>
+          {% if lc.status == False %}
+            <h><b>Статус: офлайн. Ожидание подключения...</b></h><br>
+          {% endif %}
+          <h>Влажность почвы: <b>{{ lc.water }}</b> % <br>
+            Полив: START <b>{{ lc.WaterStart }}%</b> STOP <b>{{ lc.WaterStop }}%</b><br>
+            Обновление каждые <b>{{ lc.refresh }}</b> минут</h><br>
+          {% if lc.status == True %}
+              <a href="{% url 'WControllerDetail' lc.UUID %}" class="btn btn-outline-info mt-3">Показания</a>
+          {% endif %}
+          <a href="{% url 'WController-update' lc.UUID %}" class="btn btn-outline-info mt-3">Изменить</a>
+          <a href="{% url 'WController-delete' lc.UUID %}" class="btn btn-outline-danger mt-3">Удалить</a>
+          <hr>
+        {% endif %}
+      {% endfor %}
+
+      <div class="row">
+        <div class="mt-2">
+          <span class="text-muted"><b>Дата создания:</b> {{ object.date|date:"d E Y H:i:s" }}</span>
+        </div>
+      </div>
+      {% if object.owner == user %}
+        <a href="{% url 'house-update' object.id %}" class="btn btn-info mt-3">Изменить</a>
+        <a href="{% url 'house-delete' object.id %}" class="btn btn-danger mt-3">Удалить</a>
+      {% endif %}
+    </div>
+{% endblock main_section %}
+
+{% block aside_section %}
+  <a href="{% url 'TController-add' object.id%}" class="btn btn-outline-info">Добавить контроллер тепмературы</a>
+  <a href="{% url 'LController-add' object.id%}" class="btn btn-outline-info mt-3">Добавить контроллер освещенности</a>
+  <a href="{% url 'WController-add' object.id%}" class="btn btn-outline-info mt-3">Добавить контроллер влажности почвы</a>
+{% endblock aside_section %}
